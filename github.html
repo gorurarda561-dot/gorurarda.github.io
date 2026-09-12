@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arda Görür — Cyber Security</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:        #0B0F14;
+    --surface:   #121821;
+    --surface-2: #161D27;
+    --line:      #1F2933;
+    --text:      #E6EAEE;
+    --muted:     #8A97A6;
+    --amber:     #E8A33D;
+    --amber-dim: #7A5A25;
+    --cyan:      #4FB6C4;
+    --red:       #C4584F;
+  }
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'IBM Plex Sans', sans-serif;
+    line-height:1.55;
+  }
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:64px 64px;
+    opacity:0.35;
+    pointer-events:none;
+    z-index:0;
+  }
+  .mono{ font-family:'IBM Plex Mono', monospace; }
+  a{ color:inherit; }
+  .wrap{
+    max-width:920px;
+    margin:0 auto;
+    padding:0 28px;
+    position:relative;
+    z-index:1;
+  }
+  nav{
+    position:sticky; top:0; z-index:10;
+    background:rgba(11,15,20,0.86);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    height:60px;
+  }
+  .brand{ font-family:'IBM Plex Mono', monospace; font-size:15px; letter-spacing:0.02em; }
+  .brand span{ color:var(--amber); }
+  .navlinks{ display:flex; gap:28px; font-size:14px; }
+  .navlinks a{ text-decoration:none; color:var(--muted); transition:color .15s; }
+  .navlinks a:hover{ color:var(--text); }
+
+  header.hero{ padding:96px 0 88px; position:relative; overflow:hidden; }
+  .hero-grid{
+    display:grid; grid-template-columns:1.15fr 0.85fr; gap:48px; align-items:center;
+  }
+  .terminal{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:18px 20px 22px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13.5px;
+    color:var(--muted);
+  }
+  .terminal .bar{ display:flex; gap:6px; margin-bottom:14px; }
+  .terminal .dot{ width:9px; height:9px; border-radius:50%; background:var(--line); }
+  .terminal .cmd{ color:var(--cyan); }
+  .terminal .out{ color:var(--text); }
+  .cursor{
+    display:inline-block; width:7px; height:14px; background:var(--amber);
+    vertical-align:middle; margin-left:2px;
+    animation:blink 1s steps(1) infinite;
+  }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  h1.title{
+    font-size:44px; line-height:1.15; margin:22px 0 14px; font-weight:600; letter-spacing:-0.01em;
+  }
+  h1.title .accent{ color:var(--amber); }
+  .role{ font-family:'IBM Plex Mono', monospace; color:var(--cyan); font-size:15px; margin-bottom:18px; }
+  .lede{ color:var(--muted); max-width:52ch; font-size:16px; }
+  .cta-row{ display:flex; gap:14px; margin-top:30px; flex-wrap:wrap; }
+  .btn{
+    display:inline-block; padding:11px 20px; border-radius:4px; font-size:14px;
+    text-decoration:none; font-weight:500; border:1px solid transparent;
+  }
+  .btn-primary{ background:var(--amber); color:#181205; }
+  .btn-ghost{ border-color:var(--line); color:var(--text); }
+  .btn-ghost:hover{ border-color:var(--cyan); }
+
+  .radar-wrap{ display:flex; justify-content:center; }
+  .radar{ width:280px; height:280px; }
+  .radar circle.ring{ fill:none; stroke:var(--line); stroke-width:1; }
+  .radar circle.dot{ fill:var(--amber); }
+  .radar .sweep{ transform-origin:140px 140px; animation:spin 4.5s linear infinite; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce){
+    .radar .sweep{ animation:none; }
+    .cursor{ animation:none; opacity:1; }
+  }
+
+  section{ padding:64px 0; border-top:1px solid var(--line); }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace; font-size:12.5px; color:var(--amber);
+    margin-bottom:10px;
+  }
+  h2.sec-title{ font-size:26px; font-weight:600; margin:0 0 28px; }
+
+  .about-grid{ display:grid; grid-template-columns:1.4fr 1fr; gap:40px; }
+  .about-grid p{ color:var(--muted); max-width:64ch; }
+  .stat-box{
+    border:1px solid var(--line); border-radius:6px; padding:16px 18px;
+    background:var(--surface);
+  }
+  .stat-box + .stat-box{ margin-top:12px; }
+  .stat-num{ font-family:'IBM Plex Mono', monospace; color:var(--amber); font-size:22px; }
+  .stat-label{ color:var(--muted); font-size:13px; }
+
+  .skills{ display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
+  .skill{
+    border:1px solid var(--line); border-radius:6px; padding:16px 18px; background:var(--surface);
+  }
+  .skill-top{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px; }
+  .skill-name{ font-weight:500; font-size:15px; }
+  .skill-level{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--muted); }
+  .bars{ display:flex; gap:4px; }
+  .bars i{ flex:1; height:6px; border-radius:2px; background:var(--line); }
+  .bars i.on{ background:var(--amber); }
+
+  .case{
+    display:grid; grid-template-columns:120px 1fr; gap:20px;
+    padding:20px 0; border-top:1px solid var(--line);
+  }
+  .case:first-of-type{ border-top:none; }
+  .case-tag{
+    font-family:'IBM Plex Mono', monospace; font-size:11.5px; padding:5px 8px;
+    border-radius:4px; height:fit-content; text-align:center;
+    border:1px solid var(--amber-dim); color:var(--amber);
+  }
+  .case-title{ font-size:17px; font-weight:600; margin:0 0 6px; }
+  .case-desc{ color:var(--muted); font-size:14.5px; max-width:64ch; }
+  .case-link{ font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--cyan); text-decoration:none; }
+  .case-meta{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--muted); margin-top:8px; display:flex; gap:14px; flex-wrap:wrap; }
+
+  .cert-row{
+    display:flex; justify-content:space-between; align-items:baseline;
+    padding:14px 0; border-top:1px solid var(--line); gap:16px; flex-wrap:wrap;
+  }
+  .cert-row:first-of-type{ border-top:none; }
+  .cert-name{ font-weight:500; }
+  .cert-issuer{ color:var(--muted); font-size:14px; }
+  .cert-date{ font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--amber); white-space:nowrap; }
+
+  .contact-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .contact-card{
+    border:1px solid var(--line); border-radius:6px; padding:18px 20px; background:var(--surface);
+    text-decoration:none; display:flex; flex-direction:column; gap:4px;
+  }
+  .contact-card:hover{ border-color:var(--cyan); }
+  .contact-label{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--muted); }
+  .contact-value{ font-size:15px; }
+
+  footer{ padding:32px 0 48px; text-align:center; color:var(--muted); font-size:13px; }
+
+  @media (max-width:760px){
+    .hero-grid{ grid-template-columns:1fr; }
+    .radar-wrap{ order:-1; }
+    .about-grid{ grid-template-columns:1fr; }
+    .skills{ grid-template-columns:1fr; }
+    .case{ grid-template-columns:1fr; }
+    .contact-grid{ grid-template-columns:1fr; }
+    h1.title{ font-size:32px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand">ada<span>@</span>secure<span>:</span>~</div>
+    <div class="navlinks">
+      <a href="#about">Hakkımda</a>
+      <a href="#skills">Uzmanlık</a>
+      <a href="#projects">Dosyaları</a>
+      <a href="#certs">Sertifikalar</a>
+      <a href="#contact">İletişim</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="terminal">
+        <div class="bar"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+        <div><span class="cmd">$</span> whoami</div>
+        <div class="out">Arda_Görür — siber güvenlik araştırmacısı</div>
+        <div style="margin-top:8px;"><span class="cmd">$</span> status<span class="cursor"></span></div>
+      </div>
+      <h1 class="title">Sistemleri kırmadan önce<br>nasıl kırılacaklarını <span class="accent">anlıyorum.</span></h1>
+      <div class="role">PENETRASYON TESTİ · AĞ GÜVENLİĞİ · ZAFİYET ARAŞTIRMASI</div>
+      <p class="lede">
+        4 yıldır kurumsal ağlarda sızma testleri yapıyor, açık kaynak
+        güvenlik araçları geliştiriyor ve bulduğum zafiyetleri sorumlu
+        ifşa süreciyle raporluyorum.
+      </p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#contact">İletişime geç</a>
+        <a class="btn btn-ghost" href="#" download>CV indir (PDF)</a>
+      </div>
+    </div>
+
+    <div class="radar-wrap">
+      <svg class="radar" viewBox="0 0 280 280">
+        <circle class="ring" cx="140" cy="140" r="130"/>
+        <circle class="ring" cx="140" cy="140" r="90"/>
+        <circle class="ring" cx="140" cy="140" r="50"/>
+        <line x1="10" y1="140" x2="270" y2="140" stroke="#1F2933"/>
+        <line x1="140" y1="10" x2="140" y2="270" stroke="#1F2933"/>
+        <g class="sweep">
+          <path d="M140,140 L140,10 A130,130 0 0,1 249,73 Z" fill="url(#sweepGrad)"/>
+        </g>
+        <defs>
+          <linearGradient id="sweepGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#E8A33D" stop-opacity="0"/>
+            <stop offset="100%" stop-color="#E8A33D" stop-opacity="0.35"/>
+          </linearGradient>
+        </defs>
+        <circle class="dot" cx="140" cy="140" r="4"/>
+        <circle class="dot" cx="190" cy="95" r="3.5" opacity="0.85"/>
+        <circle class="dot" cx="95" cy="185" r="3" opacity="0.6"/>
+        <circle class="dot" cx="210" cy="180" r="3" opacity="0.7"/>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<section id="about">
+  <div class="wrap about-grid">
+    <div>
+      <div class="eyebrow">HAKKIMDA</div>
+      <h2 class="sec-title">Kırmızı takımdan gelen bakış açısı</h2>
+      <p>
+        Bilgisayar mühendisliği geçmişimle birlikte saldırgan güvenlik
+        alanına yöneldim. Kurumların gerçek dünya saldırı senaryolarına
+        karşı ne kadar dayanıklı olduğunu test ediyor, bulduğum her
+        zafiyeti teknik ama anlaşılır raporlarla iletiyorum. Boş
+        zamanlarımda CTF yarışmalarına katılıyor ve açık kaynak güvenlik
+        topluluğuna araç geliştirerek katkıda bulunuyorum.
+      </p>
+    </div>
+    <div>
+      <div class="stat-box">
+        <div class="stat-num">40+</div>
+        <div class="stat-label">Tamamlanan sızma testi</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">12</div>
+        <div class="stat-label">CVE / sorumlu ifşa kaydı</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">3</div>
+        <div class="stat-label">Açık kaynak güvenlik aracı</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <div class="eyebrow">UZMANLIK ALANLARI</div>
+    <h2 class="sec-title">Neyle çalışıyorum</h2>
+    <div class="skills">
+      <div class="skill">
+        <div class="skill-top"><span class="skill-name">Ağ Sızma Testi</span><span class="skill-level">İleri</span></div>
+        <div class="bars"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
+      </div>
+      <div class="skill">
+        <div class="skill-top"><span class="skill-name">Web Uygulama Güvenliği</span><span class="skill-level">İleri</span></div>
+        <div class="bars"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div>
+      </div>
+      <div class="skill">
+        <div class="skill-top"><span class="skill-name">Adli Bilişim</span><span class="skill-level">Orta</span></div>
+        <div class="bars"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div>
+      </div>
+      <div class="skill">
+        <div class="skill-top"><span class="skill-name">Zararlı Yazılım Analizi</span><span class="skill-level">Orta</span></div>
+        <div class="bars"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div>
+      </div>
+      <div class="skill">
+        <div class="skill-top"><span class="skill-name">Bulut Güvenliği (AWS/Azure)</span><span class="skill-level">Orta-İleri</span></div>
+        <div class="bars"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
+      </div>
+      <div class="skill">
+        <div class="skill-top"><span class="skill-name">Python / Bash Scripting</span><span class="skill-level">İleri</span></div>
+        <div class="bars"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="wrap">
+    <div class="eyebrow">VAKA DOSYALARI</div>
+    <h2 class="sec-title">Projeler ve araştırmalar</h2>
+
+    <div class="case">
+      <div class="case-tag">ARAÇ</div>
+      <div>
+        <h3 class="case-title">SubReconX</h3>
+        <p class="case-desc">
+          Pasif ve aktif tekniklerle subdomain keşfi yapan, sonuçları
+          canlı port taramasıyla birleştiren açık kaynak bir keşif aracı.
+        </p>
+        <div class="case-meta">
+          <span>Python</span><span>350+ yıldız</span><span>Aktif geliştirme</span>
+        </div>
+        <a class="case-link" href="#">github.com/adayilmaz/subreconx →</a>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="case-tag">RAPOR</div>
+      <div>
+        <h3 class="case-title">Kurumsal VPN'de Kimlik Doğrulama Atlatma</h3>
+        <p class="case-desc">
+          Yaygın kullanılan bir VPN istemcisinde bulduğum, oturum
+          jetonunun yeniden kullanılmasına imkan veren zafiyet ve
+          sorumlu ifşa süreci.
+        </p>
+        <div class="case-meta">
+          <span>CVE-2025-XXXXX</span><span>Sorumlu ifşa</span><span>Üreticiyle çözüldü</span>
+        </div>
+        <a class="case-link" href="#">Yazıyı oku →</a>
+      </div>
+    </div>
+
+    <div class="case">
+      <div class="case-tag">CTF</div>
+      <div>
+        <h3 class="case-title">HackTheBox — Pro Lig Takım Kaptanlığı</h3>
+        <p class="case-desc">
+          10 kişilik takımla ulusal CTF liginde ikincilik; ağ, kriptografi
+          ve tersine mühendislik kategorilerinde çözümler.
+        </p>
+        <div class="case-meta">
+          <span>2024–2025 sezonu</span><span>2. sıra</span>
+        </div>
+        <a class="case-link" href="#">Takım profili →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="certs">
+  <div class="wrap">
+    <div class="eyebrow">SERTİFİKALAR</div>
+    <h2 class="sec-title">Belgeler</h2>
+
+    <div class="cert-row">
+      <div>
+        <div class="cert-name">OSCP — Offensive Security Certified Professional</div>
+        <div class="cert-issuer">Offensive Security</div>
+      </div>
+      <div class="cert-date">2024</div>
+    </div>
+    <div class="cert-row">
+      <div>
+        <div class="cert-name">CRTP — Certified Red Team Professional</div>
+        <div class="cert-issuer">Altered Security</div>
+      </div>
+      <div class="cert-date">2023</div>
+    </div>
+    <div class="cert-row">
+      <div>
+        <div class="cert-name">CompTIA Security+</div>
+        <div class="cert-issuer">CompTIA</div>
+      </div>
+      <div class="cert-date">2022</div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="eyebrow">İLETİŞİM</div>
+    <h2 class="sec-title">Birlikte çalışalım</h2>
+    <div class="contact-grid">
+      <a class="contact-card" href="mailto:ada.yilmaz@example.com">
+        <span class="contact-label">E-POSTA</span>
+        <span class="contact-value">ada.yilmaz@example.com</span>
+      </a>
+      <a class="contact-card" href="https://github.com/adayilmaz" target="_blank">
+        <span class="contact-label">GITHUB</span>
+        <span class="contact-value">github.com/adayilmaz</span>
+      </a>
+      <a class="contact-card" href="https://linkedin.com/in/adayilmaz" target="_blank">
+        <span class="contact-label">LINKEDIN</span>
+        <span class="contact-value">linkedin.com/in/adayilmaz</span>
+      </a>
+      <a class="contact-card" href="#">
+        <span class="contact-label">PGP ANAHTARI</span>
+        <span class="contact-value">0xA1B2 C3D4 E5F6...</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  © 2026 Arda Görür. Bu sayfa GitHub Pages üzerinde barındırılmaktadır.
+</footer>
+
+</body>
+</html>
